@@ -1,6 +1,5 @@
 ---
 title: "Code book"
-output: html_document
 ---
 
 The data captured here comes from a research project on learning to recognize human activities, based on signals captured by smartphones. Details can be found at http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones.
