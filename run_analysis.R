@@ -84,12 +84,12 @@ library(dplyr)
 # I would want the summaries to be separated by training and test parts, not just subjectCode and activityName
 means_by_part_subject_activity <- allData %>% group_by(part, subjectCode, activityName) %>% summarize_each(funs(mean))
 outFile <- paste(localFolder, "means_by_part_subject_activity.txt", sep = "/")
-write.table(means_by_part_subject_activity, outFile, col.names = TRUE, quote = FALSE)
+write.table(means_by_part_subject_activity, outFile, col.names = FALSE, quote = FALSE)
 
 # An alternative is to ignore whether it's training or test data
 means_by_subject_activity <- allData %>% select(-part) %>% group_by(subjectCode, activityName) %>% summarize_each(funs(mean))
 outFile <- paste(localFolder, "means_by_subject_activity.txt", sep = "/")
-write.table(means_by_subject_activity, outFile, col.names = TRUE, quote = FALSE)
+write.table(means_by_subject_activity, outFile, col.names = FALSE, quote = FALSE)
 
 # In both alternatives above, dplyr's summarize only keeps the groups that have some data
 # If some combinations of subjectCode and activityName have no data, those groups are missing
@@ -97,5 +97,5 @@ write.table(means_by_subject_activity, outFile, col.names = TRUE, quote = FALSE)
 library(plyr)
 all_means <- ddply(allData, .(subjectCode, activityName), numcolwise(mean), .drop = FALSE)
 outFile <- paste(localFolder, "all_means.txt", sep = "/")
-write.table(all_means, outFile, col.names = TRUE, quote = FALSE)
+write.table(all_means, outFile, col.names = FALSE, quote = FALSE)
 

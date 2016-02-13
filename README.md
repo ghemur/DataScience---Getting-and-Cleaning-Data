@@ -20,8 +20,6 @@ allData <- rbind(trainData, testData)
 
 Moreover, I don't want to lose information about which data came from the training and test set, so I capture that detail in a column called "part". In step 5, when I group data and compute summaries, I have the option to use just subject and activity for grouping, or I can also include the part. That's why I have the two output files: means_by_subject_activity.txt and means_by_part_subject_activity.txt.
 
-It's not obvious if we need to include the column names in the output (the header); I chose to do it, so that someone using the data can read the header, if the list of variables is not provided.
-
 We are supposed to do some transformation on the variable names. Well, the names were given by domain experts, so it would be hard to improve that. However, I did remove the parentheses, so that, for example "mean()" becomes "main".
 
 From the feature description at http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones I learned that the data in the Inertial Signals folder consisted of raw acceerometer and gyroscope reading, as oposed to mean or std. As such data is not needed, I chose not to even open those files.
