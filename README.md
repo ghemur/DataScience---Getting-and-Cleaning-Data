@@ -24,7 +24,7 @@ It's not obvious if we need to include the column names in the output (the heade
 
 We are supposed to do some transformation on the variable names. Well, the names were given by domain experts, so it would be hard to improve that. However, I did remove the parentheses, so that, for example "mean()" becomes "main".
 
-From the feature description at http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones I learned that the data in the Inertial Signals folder consisted of raw accelerometer and gyroscope reading, as oposed to mean or std. As such data is not needed, I chose not to even open those files.
+From the feature description at http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones I learned that the data in the Inertial Signals folder consisted of raw acceerometer and gyroscope reading, as oposed to mean or std. As such data is not needed, I chose not to even open those files.
 
 Step 5 poses another decisional challenge.
 First, I like the fluidity of the pipe operator in dplyr, so I used it to do the grouping and summarizing. However, one can notice that not all 180 combinations of 30 subjects and 6 activities are present in the data. dplyr's summarization functionality drops the missing combinations; there's no option to include them, filled with zeros or NAs. So I additionally used plyr's ddply function, in which I can request not to drop the empty combinations. This give the additional output file all_means.txt.
