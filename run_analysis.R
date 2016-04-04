@@ -26,7 +26,7 @@ featuresDT <- read.table(paste(projectFolder, "features.txt", sep = "/"), col.na
 # Extract the feature names
 features <- featuresDT$featureName  # 561 values, 477 distinct
 # Get feature names used for mean or std stats
-statFeatures <- features[grepl("mean|std", features)]  # 79 values
+statFeatures <- features[grepl("mean\\(\\)|std\\(\\)", features)]  # -> 66 values
 
 # My choice of name transformation: removing parentheses from variable name
 transformName <- function(name) { gsub("[()]", "", name) }
@@ -38,7 +38,7 @@ write.table(outputFeatures, outFile, col.names = FALSE, row.names = FALSE, quote
 # Define a function that loads and processes the data for each
 # of the two parts: train and test
 loadAndProcess <- function(part) {
-    # File conaining subject code
+    # File containing subject code
     subjects_file <- paste(projectFolder, part, paste0("subject_", part, ".txt"), sep = "/")
     # Read data into table
     subjects <- read.table(subjects_file, col.names = "subjectCode", colClasses = "factor")
@@ -82,20 +82,37 @@ str(allData)
 library(dplyr)
 
 # I would want the summaries to be separated by training and test parts, not just subjectCode and activityName
-means_by_part_subject_activity <- allData %>% group_by(part, subjectCode, activityName) %>% summarize_each(funs(mean))
+means_by_part_subject_activity <-
+    allData %>%
+    group_by(part, subjectCode, activityName) %>%
+    summarize_each(funs(mean))
 outFile <- paste(localFolder, "means_by_part_subject_activity.txt", sep = "/")
-write.table(means_by_part_subject_activity, outFile, col.names = FALSE, quote = FALSE)
+write.table(means_by_part_subject_activity, outFile, row.names = FALSE, quote = FALSE)
 
-# An alternative is to ignore whether it's training or test data
-means_by_subject_activity <- allData %>% select(-part) %>% group_by(subjectCode, activityName) %>% summarize_each(funs(mean))
+# An alternative is to ignore whether it's training or test data, and summarize the values
+# by subjectCode and activityName over the entire data set
+means_by_subject_activity <-
+    allData %>%
+    select(-part) %>%
+    group_by(subjectCode, activityName) %>%
+    summarize_each(funs(mean))
 outFile <- paste(localFolder, "means_by_subject_activity.txt", sep = "/")
-write.table(means_by_subject_activity, outFile, col.names = FALSE, quote = FALSE)
+write.table(means_by_subject_activity, outFile, row.names = FALSE, quote = FALSE)
 
-# In both alternatives above, dplyr's summarize only keeps the groups that have some data
+# The same output can be obtained via melting and dcasting the data:
+library(reshape2)
+reshapedData <-
+    allData %>%
+    select(-part) %>%
+    melt(id=c("subjectCode", "activityName")) %>%
+    dcast(subjectCode + activityName ~ variable, mean)
+outFile <- paste(localFolder, "reshapedData.txt", sep = "/")
+write.table(reshapedData, outFile, row.names = FALSE, quote = FALSE)
+
+# In the alternatives above, dplyr's summarize as well as dcast only keep the groups that have some data
 # If some combinations of subjectCode and activityName have no data, those groups are missing
 # While I think that's fine, let's look for a solution that returns 60 * 5 rows, even if some summaries are NA
 library(plyr)
 all_means <- ddply(allData, .(subjectCode, activityName), numcolwise(mean), .drop = FALSE)
 outFile <- paste(localFolder, "all_means.txt", sep = "/")
-write.table(all_means, outFile, col.names = FALSE, quote = FALSE)
-
+write.table(all_means, outFile, row.names = FALSE, quote = FALSE)

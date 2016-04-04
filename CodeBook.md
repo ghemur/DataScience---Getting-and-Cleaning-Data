@@ -6,11 +6,11 @@ The data captured here comes from a research project on learning to recognize hu
 
 I will briefly describe the nature of the project data.
 
-The experiments were conducted with 30 human volunteers, who agreed to have their activities monitored and labeled. Thus, the subjectCode column in the data detones the random number (1..30) assigned to each person.
+The experiments were conducted with 30 human volunteers, who agreed to have their activities monitored and labeled. Thus, the subjectCode column in the data denotes the random number (1..30) assigned to each person.
 
 The 6 activities labeled by researchers were: WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING. These are values of the activityName column.
 
-The purpose of this Machine Learning project is the following: given that we have human activities labeled by researchers who watch the subjects, and a large set of readings from sensors provided by a wearable device (Samsung Galaxy SII smartphone), find combinations of signals that predict human activity. The data was split into the training set, used for the ML algorithms to build a predictive model, and the test set, used to evaluate the quality of the predictions from the model.
+The purpose of this Machine Learning project is the following: given that we have human activities labeled by researchers who watch the subjects, and a large set of readings from sensors provided by a wearable device (Samsung Galaxy SII smartphone), we want to find combinations of signals that predict human activity. The data was split into the training set, used for the ML algorithms to build a predictive model, and the test set, used to evaluate the quality of the predictions from the model.
 
 The data provided here represents summaries of sensor readings, more precisely mean and standard deviation over a sample period of the experiment. The embedded accelerometer and gyroscope captured 3-axial linear acceleration and 3-axial angular velocity; therefore, X, Y and Z in the labels denote the 3 dimensional axes.
 
@@ -23,10 +23,11 @@ Subsequently, the body linear acceleration and angular velocity were derived in 
 Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the 'f' to indicate frequency domain signals). 
 
 These signals were used to estimate variables of the feature vector for each pattern:  
-'-XYZ' is used to denote 3-axial signals in the X, Y and Z directions.
+'-XYZ' is used to denote 3-axial signals in the X, Y and Z coordinates.
 
 Features are normalized and bounded within [-1,1]. Therefore, they do not have units; the values express the relative position within a normal distribution.
 
+For these features, mean and standard deviation were computed, and the names of the corresponding variables were annotated with "mean" and "std".
 The list of features:
 
 ```{r}
@@ -76,38 +77,30 @@ fBodyAcc-mean-Z
 fBodyAcc-std-X
 fBodyAcc-std-Y
 fBodyAcc-std-Z
-fBodyAcc-meanFreq-X
-fBodyAcc-meanFreq-Y
-fBodyAcc-meanFreq-Z
 fBodyAccJerk-mean-X
 fBodyAccJerk-mean-Y
 fBodyAccJerk-mean-Z
 fBodyAccJerk-std-X
 fBodyAccJerk-std-Y
 fBodyAccJerk-std-Z
-fBodyAccJerk-meanFreq-X
-fBodyAccJerk-meanFreq-Y
-fBodyAccJerk-meanFreq-Z
 fBodyGyro-mean-X
 fBodyGyro-mean-Y
 fBodyGyro-mean-Z
 fBodyGyro-std-X
 fBodyGyro-std-Y
 fBodyGyro-std-Z
-fBodyGyro-meanFreq-X
-fBodyGyro-meanFreq-Y
-fBodyGyro-meanFreq-Z
 fBodyAccMag-mean
 fBodyAccMag-std
-fBodyAccMag-meanFreq
 fBodyBodyAccJerkMag-mean
 fBodyBodyAccJerkMag-std
-fBodyBodyAccJerkMag-meanFreq
 fBodyBodyGyroMag-mean
 fBodyBodyGyroMag-std
-fBodyBodyGyroMag-meanFreq
 fBodyBodyGyroJerkMag-mean
 fBodyBodyGyroJerkMag-std
-fBodyBodyGyroJerkMag-meanFreq
 ```
+
+For different audiences, multiple files with summaries of these features were computed:
+- means_by_part_subject_activity.txt - summarizes by part (training vs testing) as well as subject identifier and type of activity;
+- means_by_subject_activity and reshapedData.txt - were computed separately via different methods, but contain identical data: metrics summarized by subject identifier and type of activity;
+- all_means.txt - unlike the other files, it includes all combinations of subject identifier and type of activity, with NA marking values that are unavailable.
 
